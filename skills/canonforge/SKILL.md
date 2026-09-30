@@ -91,7 +91,7 @@ When the user selects a character, create a **ветка персонажа** us
 
 The workspace must reference the existing source analysis instead of copying or re-processing the whole source.
 
-Use the character-to-chunk index plus adjacent context chunks. Reuse any detailed chunk extraction already present in the shared cache.
+Use the character-to-chunk index directly. Do not automatically add whole neighboring chunks: source chunks already include a small overlap. Add an extra context chunk only when a concrete extraction boundary requires it. Reuse any detailed chunk extraction already present in the shared cache.
 
 Multiple character workspaces may point to the same source analysis.
 
