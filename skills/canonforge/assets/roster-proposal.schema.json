@@ -23,7 +23,7 @@
           "signals":{
             "type":"array",
             "uniqueItems":true,
-            "items":{"enum":["dialogue","action","description","relationship","named","player"]}
+            "items":{"enum":["dialogue","action","description","relationship","named","player","first_person_narrator"]}
           }
         }
       }
