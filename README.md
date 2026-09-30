@@ -48,7 +48,18 @@ docs/
 
 ## Current milestone
 
-Build and verify the deterministic Character Core before investing in custom UI or MCP persistence.
+The deterministic Character Core and first ingestion pipeline are now present.
+
+CanonForge can already:
+
+- split stories and chapterless game logs while preserving exact source offsets;
+- fall back from turn markers to timestamps, paragraphs, or overlapping windows;
+- validate model extraction proposals;
+- resolve quote evidence into source offsets and hashes;
+- conservatively merge explicit aliases while leaving weak same-name collisions unresolved;
+- render a human-readable draft character list.
+
+The next milestone is connecting this ingestion pipeline to the skill's live model extraction step and then committing reviewed drafts into Character Core.
 
 Planned vertical prototype:
 
