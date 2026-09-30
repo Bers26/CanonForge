@@ -50,11 +50,21 @@ let rejected = false;
 try { normalizeProposal(bad, manifest); } catch { rejected = true; }
 assert(rejected, "proposal with nonexistent quote must be rejected");
 
+const thousandTurns = Array.from({length:1000}, (_, i) => `MOVE ${i+1}\nПерсонаж: действие ${i+1}.\n\n`).join("");
+const thousandManifest = buildChunkManifest(thousandTurns, {
+  sourceId:"thousand-turns", name:"synthetic-1000-turns.log", path:"synthetic-1000-turns.log",
+  maxChars:16000, maxUnits:32, overlapUnits:2, overlapChars:1200
+});
+assert(thousandManifest.strategy === "turn-log", `1000-turn log strategy should be turn-log, got ${thousandManifest.strategy}`);
+assert(thousandManifest.chunks.length > 1 && thousandManifest.chunks.length < 100, `1000 turns must be grouped, got ${thousandManifest.chunks.length} chunks`);
+for (const c of thousandManifest.chunks) assert(c.text === thousandTurns.slice(c.start,c.end), `1000-turn chunk ${c.chunkId} offsets invalid`);
+
 console.log(JSON.stringify({
   ok:true,
-  tests:8,
+  tests:11,
   turnLogChunks:manifest.chunks.length,
   plainLogChunks:plainManifest.chunks.length,
+  thousandTurnChunks:thousandManifest.chunks.length,
   entities:merged.entities.length,
   ambiguities:merged.ambiguities.length
 }));
