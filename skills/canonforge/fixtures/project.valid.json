@@ -1,0 +1,256 @@
+{
+  "schemaVersion": "0.1.0",
+  "projectId": "fixture-mira",
+  "title": "Fixture: Мира",
+  "revision": 1,
+  "sources": [
+    {
+      "sourceId": "fixture-source",
+      "name": "source.txt",
+      "path": "source.txt",
+      "sha256": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161",
+      "kind": "text",
+      "length": 338
+    }
+  ],
+  "characters": [
+    {
+      "characterId": "mira",
+      "displayName": "Мира",
+      "aliases": ["Мира Вельская"],
+      "facts": [
+        {
+          "factId": "fact-age",
+          "path": "appearance.ageYears",
+          "value": 26,
+          "origin": "explicit_source",
+          "status": "confirmed",
+          "lockPolicy": "story_event",
+          "evidence": [
+            {
+              "sourceId": "fixture-source",
+              "start": 42,
+              "end": 60,
+              "quote": "двадцать шесть лет",
+              "sourceHash": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161"
+            }
+          ],
+          "validFrom": "baseline",
+          "validTo": null,
+          "revisionIntroduced": 1,
+          "supersedes": []
+        },
+        {
+          "factId": "fact-eye-color",
+          "path": "appearance.eyes.color",
+          "value": "серо-зелёные",
+          "origin": "explicit_source",
+          "status": "approved",
+          "lockPolicy": "immutable",
+          "evidence": [
+            {
+              "sourceId": "fixture-source",
+              "start": 73,
+              "end": 91,
+              "quote": "серо-зелёные глаза",
+              "sourceHash": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161"
+            }
+          ],
+          "validFrom": "baseline",
+          "validTo": null,
+          "revisionIntroduced": 1,
+          "supersedes": []
+        },
+        {
+          "factId": "fact-hair",
+          "path": "appearance.hair.description",
+          "value": "длинные тёмно-каштановые волосы ниже плеч",
+          "origin": "explicit_source",
+          "status": "confirmed",
+          "lockPolicy": "allowed_variation",
+          "evidence": [
+            {
+              "sourceId": "fixture-source",
+              "start": 94,
+              "end": 135,
+              "quote": "длинные тёмно-каштановые волосы ниже плеч",
+              "sourceHash": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161"
+            }
+          ],
+          "validFrom": "baseline",
+          "validTo": null,
+          "revisionIntroduced": 1,
+          "supersedes": []
+        },
+        {
+          "factId": "fact-legal-name",
+          "path": "identity.legalName",
+          "value": "Мира Вельская",
+          "origin": "explicit_source",
+          "status": "confirmed",
+          "lockPolicy": "immutable",
+          "evidence": [
+            {
+              "sourceId": "fixture-source",
+              "start": 168,
+              "end": 181,
+              "quote": "Мира Вельская",
+              "sourceHash": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161"
+            }
+          ],
+          "validFrom": "baseline",
+          "validTo": null,
+          "revisionIntroduced": 1,
+          "supersedes": []
+        },
+        {
+          "factId": "fact-left-arm-baseline",
+          "path": "body.leftArm",
+          "value": "organic",
+          "origin": "inferred",
+          "status": "confirmed",
+          "lockPolicy": "explicit_event_only",
+          "evidence": [
+            {
+              "sourceId": "fixture-source",
+              "start": 211,
+              "end": 230,
+              "quote": "лишилась левой руки",
+              "sourceHash": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161"
+            }
+          ],
+          "validFrom": "baseline",
+          "validTo": "chrome-01",
+          "revisionIntroduced": 1,
+          "supersedes": []
+        },
+        {
+          "factId": "fact-left-arm-cyber",
+          "path": "body.leftArm",
+          "value": "cybernetic prosthesis",
+          "origin": "explicit_source",
+          "status": "approved",
+          "lockPolicy": "explicit_event_only",
+          "evidence": [
+            {
+              "sourceId": "fixture-source",
+              "start": 263,
+              "end": 296,
+              "quote": "кибернетический протез левой руки",
+              "sourceHash": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161"
+            }
+          ],
+          "validFrom": "chrome-01",
+          "validTo": null,
+          "revisionIntroduced": 1,
+          "supersedes": ["fact-left-arm-baseline"]
+        },
+        {
+          "factId": "fact-proportions-preserved",
+          "path": "body.proportions.continuity",
+          "value": "preserved",
+          "origin": "explicit_source",
+          "status": "confirmed",
+          "lockPolicy": "explicit_event_only",
+          "evidence": [
+            {
+              "sourceId": "fixture-source",
+              "start": 298,
+              "end": 336,
+              "quote": "сохранив прежние рост и пропорции тела",
+              "sourceHash": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161"
+            }
+          ],
+          "validFrom": "chrome-01",
+          "validTo": null,
+          "revisionIntroduced": 1,
+          "supersedes": []
+        }
+      ],
+      "identity": {
+        "identityCoreFactIds": ["fact-eye-color"],
+        "identityAnchorFactIds": ["fact-eye-color", "fact-hair"]
+      },
+      "baselineBody": {
+        "factIds": ["fact-left-arm-baseline"]
+      },
+      "states": [
+        {
+          "stateId": "baseline",
+          "label": "До аварии",
+          "factIds": ["fact-age", "fact-eye-color", "fact-hair", "fact-legal-name", "fact-left-arm-baseline"],
+          "identityCoreVersion": "1.0"
+        },
+        {
+          "stateId": "chrome-01",
+          "label": "После протезирования",
+          "factIds": ["fact-age", "fact-eye-color", "fact-hair", "fact-legal-name", "fact-left-arm-cyber", "fact-proportions-preserved"],
+          "identityCoreVersion": "1.0"
+        }
+      ],
+      "transformations": [
+        {
+          "transformationId": "tr-left-arm",
+          "fromState": "baseline",
+          "toState": "chrome-01",
+          "kind": "cybernetic_replacement",
+          "affectedPaths": ["body.leftArm"],
+          "identityEffect": "preserved",
+          "anthropometryEffect": "none",
+          "approvalStatus": "approved",
+          "evidence": [
+            {
+              "sourceId": "fixture-source",
+              "start": 263,
+              "end": 296,
+              "quote": "кибернетический протез левой руки",
+              "sourceHash": "d808d8231b8992cb87d1b941efcfe310ab39fb57023e298ace18ea6af60cc161"
+            }
+          ]
+        }
+      ],
+      "locks": [
+        {
+          "path": "appearance.eyes.color",
+          "policy": "immutable",
+          "reason": "Explicit approved source trait",
+          "introducedRevision": 1
+        },
+        {
+          "path": "identity.legalName",
+          "policy": "immutable",
+          "reason": "Explicit source identity",
+          "introducedRevision": 1
+        },
+        {
+          "path": "body.leftArm",
+          "policy": "explicit_event_only",
+          "reason": "Permanent morphology change requires an event",
+          "introducedRevision": 1
+        }
+      ],
+      "openQuestions": ["Exact height is unknown.", "Exact cranial geometry is unknown."],
+      "conflicts": [],
+      "visualIdentity": {
+        "status": "none",
+        "version": null,
+        "masterAssetIds": [],
+        "approvedTraits": [],
+        "negativeConstraints": []
+      },
+      "sheets": []
+    }
+  ],
+  "assets": [],
+  "world": { "facts": [] },
+  "style": { "facts": [] },
+  "revisionLog": [
+    {
+      "revision": 1,
+      "timestamp": "2026-10-01T00:00:00Z",
+      "summary": "Create grounded fixture project",
+      "changes": ["initial fixture"],
+      "approvedBy": "user"
+    }
+  ]
+}
