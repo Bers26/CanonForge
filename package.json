@@ -1,0 +1,11 @@
+{
+  "name": "canonforge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node skills/canonforge/scripts/test-core.mjs",
+    "validate:fixture": "node skills/canonforge/scripts/validate-project.mjs skills/canonforge/fixtures/project.valid.json",
+    "verify:fixture": "node skills/canonforge/scripts/verify-evidence.mjs skills/canonforge/fixtures/project.valid.json"
+  }
+}
