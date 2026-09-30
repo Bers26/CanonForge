@@ -41,9 +41,17 @@ The original source remains authoritative.
 
 `source-analysis.json` is a reusable derived index tied to the source SHA-256. If the source hash changes, the analysis is stale and must be refreshed.
 
-## Roster ordering and key characters
+## Roster ordering and first-person narrator
 
-The visible roster is sorted primarily by **mention count**, descending.
+If one character is the stable first-person narrator, that character is shown as **№0** regardless of direct name-mention count.
+
+This is necessary because a first-person protagonist may appear constantly as "я" while their proper name is rare.
+
+Use the explicit `first_person_narrator` roster signal. Do not infer narrator identity merely from the generic `player` signal.
+
+If several distinct characters are first-person narrators, preserve all narrator candidates and do not assign a global №0 automatically.
+
+All non-narrator characters are sorted primarily by **mention count**, descending.
 
 Tie breakers:
 
