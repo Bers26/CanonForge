@@ -43,6 +43,8 @@ const PATTERNS = {
   scene: /^\s*(?:#{1,6}\s*)?(?:SCENE|СЦЕНА)\s*(?:#|№|:|-)?\s*[\w.-]+\b/iu
 };
 
+const CAI_TIME = /^(?:меньше минуты назад|\d+\s+(?:минут[\p{L}-]*|месяц[\p{L}-]*|час[\p{L}-]*|дн[\p{L}-]*|секунд[\p{L}-]*)\s+назад|less than a minute ago|\d+\s+(?:minute|minutes|month|months|hour|hours|day|days|second|seconds)\s+ago)$/iu;
+
 function lineStarts(text) {
   const out = [];
   let start = 0;
@@ -56,21 +58,45 @@ function lineStarts(text) {
   return out;
 }
 
+function detectCharacterAiMarkers(lines) {
+  const markers = [];
+  for (let i = 0; i + 2 < lines.length; i++) {
+    const first = lines[i].line.trim();
+    const second = lines[i + 1].line.trim();
+    const third = lines[i + 2].line.trim();
+    if (!first || first !== second) continue;
+    if (third === "c.ai" || CAI_TIME.test(third)) {
+      markers.push({
+        start: lines[i].start,
+        kind: "caiMessage",
+        speaker: first,
+        role: third === "c.ai" ? "character" : "user"
+      });
+    }
+  }
+  return markers;
+}
+
 function classifyLine(line) {
   for (const [kind, re] of Object.entries(PATTERNS)) if (re.test(line)) return kind;
   return null;
 }
 
 function detectStrategy(text) {
+  const lines = lineStarts(text);
+  const caiMarkers = detectCharacterAiMarkers(lines);
   const markers = [];
   const counts = Object.fromEntries(Object.keys(PATTERNS).map((k) => [k, 0]));
-  for (const l of lineStarts(text)) {
+  counts.caiMessage = caiMarkers.length;
+  for (const l of lines) {
     const kind = classifyLine(l.line);
     if (kind) { markers.push({ start: l.start, kind }); counts[kind]++; }
   }
-  const conversational = counts.turn + counts.promptResponse + counts.genericChatRole;
+  if (caiMarkers.length >= 3) return { strategy: "character-ai-log", markers: caiMarkers, counts };
   const structural = counts.chapter + counts.scene + counts.session;
-  if (conversational >= 3) return { strategy: "turn-log", markers, counts };
+  if (counts.promptResponse >= 3) return { strategy: "chat-transcript", markers, counts };
+  if (counts.genericChatRole >= 3) return { strategy: "role-log", markers, counts };
+  if (counts.turn >= 3) return { strategy: "turn-log", markers, counts };
   if (counts.timestamp >= 3) return { strategy: "timestamp-log", markers, counts };
   if (structural >= 2) return { strategy: "structured-narrative", markers, counts };
 
@@ -93,8 +119,16 @@ function detectStrategy(text) {
 function boundariesFor(text, detection) {
   const { strategy, markers } = detection;
   let starts = [];
-  if (strategy === "turn-log") {
-    const allowed = new Set(["turn","promptResponse","genericChatRole","session"]);
+  if (strategy === "character-ai-log") {
+    starts = markers;
+  } else if (strategy === "chat-transcript") {
+    const allowed = new Set(["promptResponse","session"]);
+    starts = markers.filter((m) => allowed.has(m.kind));
+  } else if (strategy === "role-log") {
+    const allowed = new Set(["genericChatRole","session"]);
+    starts = markers.filter((m) => allowed.has(m.kind));
+  } else if (strategy === "turn-log") {
+    const allowed = new Set(["turn","session"]);
     starts = markers.filter((m) => allowed.has(m.kind));
   } else if (strategy === "timestamp-log") {
     const allowed = new Set(["timestamp","session"]);
@@ -114,7 +148,9 @@ function boundariesFor(text, detection) {
     unitIndex: i,
     start: b.start,
     end: i + 1 < deduped.length ? deduped[i+1].start : text.length,
-    kind: b.kind
+    kind: b.kind,
+    speaker: b.speaker ?? null,
+    role: b.role ?? null
   }));
 }
 
@@ -141,7 +177,14 @@ function splitOversizeUnit(text, unit, maxChars, overlapChars) {
 function chunkUnits(text, units, { strategy, maxChars, maxUnits, overlapUnits, overlapChars }) {
   const expanded = units.flatMap((u) => splitOversizeUnit(text, u, maxChars, overlapChars));
   if (strategy === "structured-narrative") {
-    return expanded.map((u) => ({ start: u.start, end: u.end, unitStart: u.unitIndex, unitEnd: u.unitIndex, boundaryKinds: [u.kind] }));
+    return expanded.map((u) => ({
+      start: u.start,
+      end: u.end,
+      unitStart: u.unitIndex,
+      unitEnd: u.unitIndex,
+      boundaryKinds: [u.kind],
+      speakers: u.speaker ? [u.speaker] : []
+    }));
   }
   if (strategy === "fixed-window") {
     const chunks = [];
@@ -154,7 +197,7 @@ function chunkUnits(text, units, { strategy, maxChars, maxUnits, overlapUnits, o
         const one = text.lastIndexOf("\n", end);
         end = nl >= floor ? nl + 2 : (one >= floor ? one + 1 : end);
       }
-      chunks.push({ start, end, unitStart: null, unitEnd: null, boundaryKinds: ["window"] });
+      chunks.push({ start, end, unitStart: null, unitEnd: null, boundaryKinds: ["window"], speakers: [] });
       if (end >= text.length) break;
       start = Math.max(start + 1, end - overlapChars);
     }
@@ -179,7 +222,8 @@ function chunkUnits(text, units, { strategy, maxChars, maxUnits, overlapUnits, o
       end,
       unitStart: first.unitIndex,
       unitEnd: slice.at(-1).unitIndex,
-      boundaryKinds: [...new Set(slice.map((u) => u.kind))]
+      boundaryKinds: [...new Set(slice.map((u) => u.kind))],
+      speakers: [...new Set(slice.map((u) => u.speaker).filter(Boolean))]
     });
     if (j >= expanded.length - 1) break;
     const advance = Math.max(1, (j - i + 1) - overlapUnits);
@@ -217,6 +261,7 @@ export function buildChunkManifest(text, options) {
       unitStart: c.unitStart,
       unitEnd: c.unitEnd,
       boundaryKinds: c.boundaryKinds,
+      speakers: c.speakers ?? [],
       text: text.slice(c.start, c.end)
     }))
   };
