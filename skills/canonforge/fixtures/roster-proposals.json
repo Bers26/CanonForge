@@ -1,0 +1,75 @@
+[
+  {
+    "schemaVersion":"0.1.0",
+    "sourceId":"game-log",
+    "chunkId":"c0001",
+    "mentions":[
+      {
+        "mentionId":"mira-1",
+        "primaryName":"Мира",
+        "sourceIdentityKey":null,
+        "evidence":{"quote":"Мира: Я поведу корабль сама.","occurrence":0},
+        "signals":["dialogue","named","player"]
+      },
+      {
+        "mentionId":"alex-1",
+        "primaryName":"Алекс",
+        "sourceIdentityKey":null,
+        "evidence":{"quote":"Алекс: Тогда я проверю шлюз.","occurrence":0},
+        "signals":["dialogue","named"]
+      }
+    ],
+    "aliasClaims":[
+      {
+        "left":"Мира",
+        "right":"Мира Вельская",
+        "basis":"explicit",
+        "evidence":{"quote":"Мира Вельская; это та же Мира","occurrence":0}
+      }
+    ]
+  },
+  {
+    "schemaVersion":"0.1.0",
+    "sourceId":"game-log",
+    "chunkId":"c0002",
+    "mentions":[
+      {
+        "mentionId":"mira-2",
+        "primaryName":"Мира",
+        "sourceIdentityKey":null,
+        "evidence":{"quote":"Мира посмотрела на него серо-зелёными глазами.","occurrence":0},
+        "signals":["description","named"]
+      },
+      {
+        "mentionId":"alex-station-1",
+        "primaryName":"Другой Алекс",
+        "sourceIdentityKey":null,
+        "evidence":{"quote":"Другой Алекс ждал их на станции","occurrence":0},
+        "signals":["named","description"]
+      }
+    ],
+    "aliasClaims":[]
+  },
+  {
+    "schemaVersion":"0.1.0",
+    "sourceId":"game-log",
+    "chunkId":"c0003",
+    "mentions":[
+      {
+        "mentionId":"mira-3",
+        "primaryName":"Мира Вельская",
+        "sourceIdentityKey":null,
+        "evidence":{"quote":"Мира Вельская взялась за управление.","occurrence":0},
+        "signals":["action","named"]
+      },
+      {
+        "mentionId":"alex-station-2",
+        "primaryName":"Другой Алекс",
+        "sourceIdentityKey":null,
+        "evidence":{"quote":"Другой Алекс остался на станции.","occurrence":0},
+        "signals":["action","named"]
+      }
+    ],
+    "aliasClaims":[]
+  }
+]
