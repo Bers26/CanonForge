@@ -72,7 +72,7 @@ Use `assets/roster-proposal.schema.json` and normalize the results with `scripts
 
 Then build one reusable `source-analysis.json` with `scripts/build-source-analysis.mjs`.
 
-Immediately show the user the found character roster, with likely key characters first. Do not hide minor characters; the key/recurring/minor classification is only interface ordering, not canon.
+Immediately show the user the found character roster sorted primarily by mention count, descending. Use distinct chunk count and prominence only as tie breakers. Do not hide minor characters from the underlying roster. The key/recurring/minor classification is only a label, not canon and not the primary sort order. Do not auto-select a character or create a branch before the user chooses one.
 
 Follow `references/source-analysis.md`.
 
@@ -103,7 +103,7 @@ For each proposed fact:
 - distinguish temporary state changes from contradictions;
 - avoid merging aliases unless identity is supported.
 
-Store reusable detailed chunk results in shared cache rather than only inside one character branch.
+Store reusable detailed chunk results in shared cache rather than only inside one character branch. After a detailed chunk extraction validates, mark that chunk complete in shared cache so later character branches do not analyze it again.
 
 Follow `references/extraction.md`, `references/extraction-proposals.md`, `references/source-analysis.md`, and `references/project-schema.md`.
 
