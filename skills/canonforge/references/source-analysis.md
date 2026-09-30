@@ -41,18 +41,26 @@ The original source remains authoritative.
 
 `source-analysis.json` is a reusable derived index tied to the source SHA-256. If the source hash changes, the analysis is stale and must be refreshed.
 
-## Key characters
+## Roster ordering and key characters
 
-"Key" is an interface ordering signal, not canon.
+The visible roster is sorted primarily by **mention count**, descending.
 
-Use measurable prominence signals such as:
+Tie breakers:
+
+1. number of distinct chunks in which the character appears;
+2. prominence score;
+3. display name.
+
+This keeps central characters near the top even when the source contains many one-off named NPCs.
+
+"Key" remains an interface label, not canon. It may use measurable prominence signals such as:
 
 - coverage across chunks;
 - repeated mentions;
 - active dialogue/action/description;
 - stable explicit identity.
 
-Never discard characters solely because they are not key. The interface may present key characters first and still expose the complete roster.
+The key label does not override mention-count ordering and does not remove minor characters from the underlying roster.
 
 ## Character branch
 
