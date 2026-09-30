@@ -6,6 +6,7 @@ import { buildChunkManifest } from "./chunk-source.mjs";
 import { normalizeRosterProposal } from "./roster.mjs";
 import { buildSourceAnalysis } from "./build-source-analysis.mjs";
 import { createCharacterWorkspace } from "./create-character-workspace.mjs";
+import { renderRoster } from "./render-roster.mjs";
 
 const here=dirname(fileURLToPath(import.meta.url));
 const fixtures=resolve(here,"../fixtures");
@@ -55,9 +56,25 @@ const cachedWorkspace=createCharacterWorkspace(cached,mira.characterId,"source-a
 assert(cachedWorkspace.sourceUsage.cachedDetailChunkIds.includes("c0001"),"shared detail cache was not reused");
 assert(!cachedWorkspace.sourceUsage.pendingDetailChunkIds.includes("c0001"),"cached detail chunk should not be scheduled again");
 
+const narratorBundle=JSON.parse(JSON.stringify(bundle));
+narratorBundle.proposals[0].mentions[0].signals.push("first_person_narrator");
+const narratorAnalysis=buildSourceAnalysis(manifest,narratorBundle);
+const narratorMira=narratorAnalysis.characters.find(c=>c.names.includes("Мира Вельская"));
+assert(narratorAnalysis.narratorCharacterId===narratorMira.characterId,"single first-person narrator must become narratorCharacterId");
+const rendered=renderRoster(narratorAnalysis);
+assert(rendered.includes(`0. **${narratorMira.displayName}**`),"first-person narrator must render as number 0");
+assert(!rendered.includes(`1. **${narratorMira.displayName}**`),"first-person narrator must not also appear in numbered roster");
+
+const multiNarratorBundle=JSON.parse(JSON.stringify(bundle));
+multiNarratorBundle.proposals[0].mentions[0].signals.push("first_person_narrator");
+multiNarratorBundle.proposals[0].mentions[1].signals.push("first_person_narrator");
+const multiNarratorAnalysis=buildSourceAnalysis(manifest,multiNarratorBundle);
+assert(multiNarratorAnalysis.narratorCharacterId===null,"multiple first-person narrators must not auto-claim number 0");
+assert(multiNarratorAnalysis.narratorCandidateIds.length===2,"multiple narrator candidates must be preserved");
+
 console.log(JSON.stringify({
   ok:true,
-  tests:12,
+  tests:17,
   characters:analysis.characters.length,
   keyCharacters:analysis.keyCharacterIds.length,
   miraChunks:mira.chunkIds.length,
