@@ -1,0 +1,26 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "canonforge",
+  "version": "0.1.0",
+  "description": "Build and preserve grounded character canon and visual continuity inside ChatGPT.",
+  "author": {
+    "name": "Bers26"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "CanonForge",
+        "shortDescription": "Character canon workflow",
+        "longDescription": "Build grounded character canon from source material, manage identity-preserving transformations, and drive consistent visual character development with ChatGPT image generation.",
+        "developerName": "Bers26",
+        "category": "Productivity",
+        "capabilities": ["Interactive"],
+        "defaultPrompt": [
+          "Разбери загруженный текст и собери канон персонажей.",
+          "Создай exploration sheet для выбранного персонажа.",
+          "Проверь проект персонажа на противоречия и дрейф идентичности."
+        ]
+      }
+    }
+  }
+}
