@@ -50,6 +50,25 @@ let rejected = false;
 try { normalizeProposal(bad, manifest); } catch { rejected = true; }
 assert(rejected, "proposal with nonexistent quote must be rejected");
 
+const caiText = readFileSync(resolve(fixtures, "character-ai-log.txt"), "utf8");
+const caiManifest = buildChunkManifest(caiText, {
+  sourceId:"cai-log", name:"character-ai-log.txt", path:"character-ai-log.txt",
+  maxChars:16000, maxUnits:32, overlapUnits:2, overlapChars:1200
+});
+assert(caiManifest.strategy === "character-ai-log", `expected character-ai-log, got ${caiManifest.strategy}`);
+assert(caiManifest.markerCounts.caiMessage === 6, `expected 6 Character.AI message markers, got ${caiManifest.markerCounts.caiMessage}`);
+assert(caiManifest.chunks.some(c => c.speakers.includes("Andrey Drako")), "Character.AI speakers were not preserved");
+
+const transcript = Array.from({length:6}, (_, i) => `## Prompt:\n2026-10-01, 00:0${i}:00\nMOVE${String(i+1).padStart(4,"0")}\nuser ${i}\n\n## Response:\n2026-10-01, 00:0${i}:01\nMOVE${String(i+101).padStart(4,"0")}\nassistant ${i}\n\n`).join("");
+const transcriptManifest = buildChunkManifest(transcript, {
+  sourceId:"transcript", name:"transcript.md", path:"transcript.md",
+  maxChars:16000, maxUnits:32, overlapUnits:2, overlapChars:1200
+});
+assert(transcriptManifest.strategy === "chat-transcript", `expected chat-transcript, got ${transcriptManifest.strategy}`);
+assert(transcriptManifest.markerCounts.promptResponse === 12, "Prompt/Response markers missing");
+assert(transcriptManifest.markerCounts.turn === 12, "MOVE markers should still be observed");
+assert(transcriptManifest.chunks.every(c => !c.boundaryKinds.includes("turn")), "nested MOVE markers must not become transcript boundaries");
+
 const thousandTurns = Array.from({length:1000}, (_, i) => `MOVE ${i+1}\nПерсонаж: действие ${i+1}.\n\n`).join("");
 const thousandManifest = buildChunkManifest(thousandTurns, {
   sourceId:"thousand-turns", name:"synthetic-1000-turns.log", path:"synthetic-1000-turns.log",
@@ -61,10 +80,12 @@ for (const c of thousandManifest.chunks) assert(c.text === thousandTurns.slice(c
 
 console.log(JSON.stringify({
   ok:true,
-  tests:11,
+  tests:18,
   turnLogChunks:manifest.chunks.length,
   plainLogChunks:plainManifest.chunks.length,
   thousandTurnChunks:thousandManifest.chunks.length,
+  caiChunks:caiManifest.chunks.length,
+  transcriptChunks:transcriptManifest.chunks.length,
   entities:merged.entities.length,
   ambiguities:merged.ambiguities.length
 }));
