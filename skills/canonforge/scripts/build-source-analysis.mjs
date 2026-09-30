@@ -55,10 +55,17 @@ export function buildSourceAnalysis(manifest, normalizedRosterBundle) {
     a.displayName.localeCompare(b.displayName)
   );
 
+  const narratorCandidates=characters
+    .filter(c=>c.signals.includes("first_person_narrator"))
+    .map(c=>c.characterId);
+  const narratorCharacterId=narratorCandidates.length===1 ? narratorCandidates[0] : null;
+
   const analysisId=`analysis-${hashId(manifest.source.sourceId+"|"+manifest.source.sha256)}`;
   return {
     schemaVersion:"0.1.0",
     analysisId,
+    narratorCharacterId,
+    narratorCandidateIds:narratorCandidates,
     source:manifest.source,
     chunking:{
       strategy:manifest.strategy,
