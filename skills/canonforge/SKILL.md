@@ -72,7 +72,11 @@ Use `assets/roster-proposal.schema.json` and normalize the results with `scripts
 
 Then build one reusable `source-analysis.json` with `scripts/build-source-analysis.mjs`.
 
-Immediately show the user the found character roster sorted primarily by mention count, descending. Use distinct chunk count and prominence only as tie breakers. Do not hide minor characters from the underlying roster. The key/recurring/minor classification is only a label, not canon and not the primary sort order. Do not auto-select a character or create a branch before the user chooses one.
+Immediately show the user the found character roster.
+
+If exactly one character is the stable first-person narrator, mark that character with the `first_person_narrator` signal and show them as **№0**, regardless of direct name-mention count. Do not equate generic player identity with first-person narration. If several distinct first-person narrators exist, keep all narrator candidates and do not assign №0 automatically.
+
+Sort all remaining characters primarily by mention count, descending. Use distinct chunk count and prominence only as tie breakers. Do not hide minor characters from the underlying roster. The key/recurring/minor classification is only a label, not canon and not the primary sort order. Do not auto-select a character or create a branch before the user chooses one.
 
 Follow `references/source-analysis.md`.
 
