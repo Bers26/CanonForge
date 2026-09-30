@@ -14,11 +14,12 @@
       "items": {
         "type":"object",
         "additionalProperties": false,
-        "required": ["mentionId","primaryName","sourceIdentityKey","evidence","signals"],
+        "required": ["mentionId","primaryName","sourceIdentityKey","mentionCount","evidence","signals"],
         "properties": {
           "mentionId":{"type":"string","minLength":1},
           "primaryName":{"type":"string","minLength":1},
           "sourceIdentityKey":{"type":["string","null"]},
+          "mentionCount":{"type":"integer","minimum":1},
           "evidence":{"$ref":"#/$defs/locator"},
           "signals":{
             "type":"array",
