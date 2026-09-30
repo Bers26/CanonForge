@@ -61,28 +61,32 @@ Unknown but visually necessary properties become `open_design_variable`, not can
 
 ## Chunking strategy
 
-Long sources must be chunked by their real structure when possible.
+Long sources must be chunked by the strongest structure they actually contain. **Chapters are optional.**
 
-Supported conceptual strategies:
+For game logs, use this priority:
 
-1. chapter;
-2. scene;
-3. timestamp or session boundary;
-4. message-log boundary;
-5. fixed overlapping window as fallback.
+1. explicit turn/message/session markers such as `MOVE 412`, `ХОД 412`, `Prompt`, `Response`, or stable chat roles;
+2. timestamps;
+3. paragraph boundaries when turns/messages are separated by blank lines;
+4. fixed overlapping character windows when the log has no useful markup at all.
 
-Do not assume English headings only. Recognize source-specific structures such as:
+For ordinary narrative text, chapter/scene markers may be used when present.
+
+Recognize both Russian and English structures, for example:
 
 ```text
-Глава 17
-Сцена 42
+MOVE 412
+ХОД 412
 SESSION_048
 DAY 12
 [2035-09-17 22:34]
-NPC_LOG:
+Глава 17
+Сцена 42
 ```
 
-The chunker must preserve source offsets so evidence can be verified against the original source.
+A thousand-turn log must not become a thousand independent model calls. Group consecutive units into manageable chunks and keep a small overlap so facts that cross a boundary are not lost.
+
+Every chunk must preserve absolute source offsets. The chunk text must always equal `source.slice(start, end)` exactly, so later evidence can be verified against the original source.
 
 ## Alias policy
 
