@@ -27,6 +27,15 @@ assert(mira,"Mira entity missing");
 assert(mira.names.includes("Мира"),"Mira alias forms were not merged");
 assert(mira.chunkIds.length===3,`Mira should cover 3 chunks, got ${mira.chunkIds.length}`);
 assert(mira.prominence.band==="key",`Mira should be key, got ${mira.prominence.band}`);
+assert(analysis.characters[0].characterId===mira.characterId,"roster must put the most-mentioned character first");
+for (let i=1;i<analysis.characters.length;i++) {
+  const prev=analysis.characters[i-1], cur=analysis.characters[i];
+  assert(
+    prev.mentionCount>cur.mentionCount ||
+    (prev.mentionCount===cur.mentionCount && prev.chunkIds.length>=cur.chunkIds.length),
+    "roster is not sorted by mentions/chunk coverage"
+  );
+}
 
 const miraWorkspace=createCharacterWorkspace(analysis,mira.characterId,"source-analysis.json");
 assert(miraWorkspace.sourceAnalysis.analysisId===analysis.analysisId,"workspace must reference shared source analysis");
@@ -48,7 +57,7 @@ assert(!cachedWorkspace.sourceUsage.pendingDetailChunkIds.includes("c0001"),"cac
 
 console.log(JSON.stringify({
   ok:true,
-  tests:10,
+  tests:12,
   characters:analysis.characters.length,
   keyCharacters:analysis.keyCharacterIds.length,
   miraChunks:mira.chunkIds.length,
