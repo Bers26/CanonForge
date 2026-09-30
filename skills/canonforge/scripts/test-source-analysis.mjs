@@ -42,6 +42,8 @@ for (let i=1;i<analysis.characters.length;i++) {
 const miraWorkspace=createCharacterWorkspace(analysis,mira.characterId,"source-analysis.json");
 assert(miraWorkspace.sourceAnalysis.analysisId===analysis.analysisId,"workspace must reference shared source analysis");
 assert(miraWorkspace.sourceUsage.directChunkIds.length===3,"Mira workspace lost direct chunk index");
+assert(JSON.stringify(miraWorkspace.sourceUsage.requiredChunkIds)===JSON.stringify(miraWorkspace.sourceUsage.directChunkIds),"workspace should not auto-add whole neighboring chunks");
+assert(miraWorkspace.sourceUsage.requestedContextChunkIds.length===0,"context chunks should start empty");
 assert(!JSON.stringify(miraWorkspace).includes("MOVE 1"),"workspace must not copy source text");
 
 const alex=analysis.characters.find(c=>c.displayName==="Алекс");
@@ -75,7 +77,7 @@ assert(multiNarratorAnalysis.narratorCandidateIds.length===2,"multiple narrator 
 
 console.log(JSON.stringify({
   ok:true,
-  tests:18,
+  tests:20,
   characters:analysis.characters.length,
   keyCharacters:analysis.keyCharacterIds.length,
   miraChunks:mira.chunkIds.length,
