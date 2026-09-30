@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canonforge.local/schemas/source-analysis-0.1.0.json",
+  "title": "CanonForge Source Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion","analysisId","source","chunking","characters","keyCharacterIds","ambiguities","chunkCache"],
+  "properties": {
+    "schemaVersion": {"const":"0.1.0"},
+    "analysisId": {"type":"string","minLength":1},
+    "source": {
+      "type":"object",
+      "required":["sourceId","name","path","sha256","length"],
+      "properties":{
+        "sourceId":{"type":"string","minLength":1},
+        "name":{"type":"string","minLength":1},
+        "path":{"type":["string","null"]},
+        "sha256":{"type":"string","pattern":"^[a-fA-F0-9]{64}$"},
+        "length":{"type":"integer","minimum":0}
+      }
+    },
+    "chunking":{
+      "type":"object",
+      "required":["strategy","parameters","chunkCount","chunkOrder"],
+      "properties":{
+        "strategy":{"type":"string","minLength":1},
+        "parameters":{"type":"object"},
+        "chunkCount":{"type":"integer","minimum":1},
+        "chunkOrder":{"type":"array","items":{"type":"string"},"uniqueItems":true}
+      }
+    },
+    "characters":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["characterId","displayName","names","mergeBasis","mentionRefs","mentionCount","chunkIds","firstChunkId","lastChunkId","signals","prominence"],
+        "properties":{
+          "characterId":{"type":"string","minLength":1},
+          "displayName":{"type":"string","minLength":1},
+          "names":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "mergeBasis":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "mentionRefs":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "mentionCount":{"type":"integer","minimum":1},
+          "chunkIds":{"type":"array","items":{"type":"string"},"minItems":1,"uniqueItems":true},
+          "firstChunkId":{"type":["string","null"]},
+          "lastChunkId":{"type":["string","null"]},
+          "signals":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+          "prominence":{
+            "type":"object",
+            "required":["score","band","chunkCoverage"],
+            "properties":{
+              "score":{"type":"integer","minimum":0,"maximum":100},
+              "band":{"enum":["key","recurring","minor"]},
+              "chunkCoverage":{"type":"number","minimum":0,"maximum":1}
+            }
+          }
+        }
+      }
+    },
+    "keyCharacterIds":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+    "ambiguities":{"type":"array","items":{"type":"object"}},
+    "chunkCache":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["chunkId","rosterStatus","detailStatus","detailExtractionRef"],
+        "properties":{
+          "chunkId":{"type":"string","minLength":1},
+          "rosterStatus":{"enum":["missing","complete"]},
+          "detailStatus":{"enum":["missing","complete"]},
+          "detailExtractionRef":{"type":["string","null"]}
+        }
+      }
+    }
+  }
+}
