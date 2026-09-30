@@ -65,10 +65,13 @@ Long sources must be chunked by the strongest structure they actually contain. *
 
 For game logs, use this priority:
 
-1. explicit turn/message/session markers such as `MOVE 412`, `ХОД 412`, `Prompt`, `Response`, or stable chat roles;
-2. timestamps;
-3. paragraph boundaries when turns/messages are separated by blank lines;
-4. fixed overlapping character windows when the log has no useful markup at all.
+1. native message boundaries when a known export format exposes them, including Character.AI duplicated speaker headers;
+2. `Prompt/Response` boundaries in ChatGPT-style exports;
+3. explicit `MOVE/ХОД` boundaries when they are the primary log structure;
+4. stable chat roles;
+5. timestamps;
+6. paragraph boundaries when turns/messages are separated by blank lines;
+7. fixed overlapping character windows when the log has no useful markup at all.
 
 For ordinary narrative text, chapter/scene markers may be used when present.
 
@@ -129,3 +132,10 @@ A transformation means the property changed across states.
 Extraction produces proposals only.
 
 A proposal becomes durable project state after deterministic validation and, where required, user approval.
+
+
+### Dominant boundary rule
+
+Do not combine nested boundary systems at the same level. If a ChatGPT export contains both `Prompt/Response` and `MOVE`, use `Prompt/Response` as message boundaries and treat `MOVE` as content inside the response. This avoids tiny duplicate chunks.
+
+Character.AI exports with duplicated speaker headers are recognized as `character-ai-log`; the detected speaker names are preserved in chunk metadata.
