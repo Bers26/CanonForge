@@ -1,6 +1,6 @@
 function isObject(v) { return typeof v === "object" && v !== null && !Array.isArray(v); }
 function nonempty(v) { return typeof v === "string" && v.trim() !== ""; }
-const SIGNALS = new Set(["dialogue","action","description","relationship","named","player"]);
+const SIGNALS = new Set(["dialogue","action","description","relationship","named","player","first_person_narrator"]);
 
 function validateLocator(loc, path) {
   const errors=[];
