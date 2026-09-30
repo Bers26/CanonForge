@@ -69,6 +69,7 @@ For each chunk, return one lightweight roster record per detected character with
 - character name/label;
 - local semantic `mentionCount` used for ordering;
 - exact evidence for at least one representative mention;
+- no frequency credit for duplicated UI/export chrome, counters, timestamps, or repeated speaker-label lines;
 - explicit source identity keys when the source provides them;
 - explicit/probable alias claims;
 - lightweight prominence signals.
