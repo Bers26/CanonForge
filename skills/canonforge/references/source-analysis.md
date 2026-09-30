@@ -30,9 +30,11 @@ After the user chooses a character, create a character workspace.
 The workspace points to the existing source analysis and lists:
 
 - chunks in which the character is directly present;
-- adjacent context chunks;
 - detailed chunks already present in shared cache;
-- detailed chunks that still need extraction.
+- detailed chunks that still need extraction;
+- optional context chunks requested later for a concrete boundary case.
+
+Do not automatically add the entire previous and next chunk around every hit. The chunker already keeps a small overlap, and unconditional neighboring chunks make central-character branches approach the size of the whole source.
 
 Detailed extraction results belong to the shared chunk cache whenever possible. If a later character needs a chunk already processed in detail, reuse it.
 
@@ -86,8 +88,9 @@ A workspace does not copy the source or repeat the global analysis. It reference
 - `analysisId`;
 - source ID/hash;
 - selected `characterId`;
-- relevant chunk IDs;
+- directly relevant chunk IDs;
 - shared cached detailed extractions;
+- optional explicitly requested context chunks;
 - eventual Character Core;
 - eventual visual identity.
 
