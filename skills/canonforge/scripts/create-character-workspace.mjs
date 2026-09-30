@@ -3,8 +3,6 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { basename } from "node:path";
 import process from "node:process";
 
-function uniq(v){return [...new Set(v)];}
-
 export function createCharacterWorkspace(analysis,selector,analysisPath="source-analysis.json") {
   const exact=analysis.characters.find(c=>c.characterId===selector);
   const byName=analysis.characters.filter(c=>c.displayName===selector || (c.names??[]).includes(selector));
@@ -14,15 +12,11 @@ export function createCharacterWorkspace(analysis,selector,analysisPath="source-
     throw new Error(`character not found: ${selector}`);
   }
 
-  const order=analysis.chunking.chunkOrder;
-  const indexes=character.chunkIds.map(id=>order.indexOf(id)).filter(i=>i>=0);
-  const contextIds=[];
-  for (const i of indexes) {
-    if (i>0) contextIds.push(order[i-1]);
-    contextIds.push(order[i]);
-    if (i+1<order.length) contextIds.push(order[i+1]);
-  }
-  const requiredChunkIds=uniq(contextIds);
+  // The source chunks already contain a small overlap. Do not inflate every
+  // character branch by automatically pulling whole neighboring chunks.
+  // Additional context chunks are requested only when a concrete boundary case
+  // requires them.
+  const requiredChunkIds=[...new Set(character.chunkIds)];
   const cache=new Map((analysis.chunkCache??[]).map(c=>[c.chunkId,c]));
   const cachedDetailChunkIds=requiredChunkIds.filter(id=>cache.get(id)?.detailStatus==="complete");
   const pendingDetailChunkIds=requiredChunkIds.filter(id=>cache.get(id)?.detailStatus!=="complete");
@@ -48,7 +42,8 @@ export function createCharacterWorkspace(analysis,selector,analysisPath="source-
       directChunkIds:character.chunkIds,
       requiredChunkIds,
       cachedDetailChunkIds,
-      pendingDetailChunkIds
+      pendingDetailChunkIds,
+      requestedContextChunkIds:[]
     },
     characterCoreRef:null,
     visualIdentityRef:null
