@@ -1,0 +1,69 @@
+[
+  {
+    "schemaVersion":"0.1.0",
+    "sourceId":"game-log",
+    "chunkId":"c0001",
+    "mentions":[
+      {
+        "mentionId":"mira-1",
+        "primaryName":"Мира",
+        "sourceIdentityKey":null,
+        "facts":[
+          {
+            "path":"appearance.hair.description",
+            "value":"длинные тёмно-каштановые волосы",
+            "origin":"explicit_source",
+            "evidence":{"quote":"длинные тёмно-каштановые волосы","occurrence":0}
+          }
+        ]
+      },
+      {
+        "mentionId":"alex-ship-1",
+        "primaryName":"Алекс",
+        "sourceIdentityKey":null,
+        "facts":[]
+      }
+    ],
+    "aliasClaims":[
+      {
+        "left":"Мира",
+        "right":"Мира Вельская",
+        "basis":"explicit",
+        "evidence":{"quote":"Мира Вельская; это та же Мира","occurrence":0}
+      }
+    ],
+    "transformations":[],
+    "conflicts":[],
+    "openQuestions":[]
+  },
+  {
+    "schemaVersion":"0.1.0",
+    "sourceId":"game-log",
+    "chunkId":"c0002",
+    "mentions":[
+      {
+        "mentionId":"mira-2",
+        "primaryName":"Мира Вельская",
+        "sourceIdentityKey":null,
+        "facts":[
+          {
+            "path":"appearance.eyes.color",
+            "value":"серо-зелёные",
+            "origin":"explicit_source",
+            "evidence":{"quote":"серо-зелёными глазами","occurrence":0}
+          }
+        ]
+      },
+      {
+        "mentionId":"alex-station",
+        "primaryName":"Алекс",
+        "sourceIdentityKey":null,
+        "facts":[]
+      }
+    ],
+    "aliasClaims":[],
+    "transformations":[],
+    "conflicts":[],
+    "openQuestions":[]
+  }
+]
