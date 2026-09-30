@@ -4,10 +4,12 @@
   "title": "CanonForge Source Analysis",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion","analysisId","source","chunking","characters","keyCharacterIds","ambiguities","chunkCache"],
+  "required": ["schemaVersion","analysisId","narratorCharacterId","narratorCandidateIds","source","chunking","characters","keyCharacterIds","ambiguities","chunkCache"],
   "properties": {
     "schemaVersion": {"const":"0.1.0"},
     "analysisId": {"type":"string","minLength":1},
+    "narratorCharacterId": {"type":["string","null"]},
+    "narratorCandidateIds": {"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
     "source": {
       "type":"object",
       "required":["sourceId","name","path","sha256","length"],
