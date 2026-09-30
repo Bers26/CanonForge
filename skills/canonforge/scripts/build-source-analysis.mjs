@@ -48,7 +48,12 @@ export function buildSourceAnalysis(manifest, normalizedRosterBundle) {
       signals:s.signals,
       prominence:{score:s.score,band:s.band,chunkCoverage:s.coverage}
     };
-  }).sort((a,b)=>b.prominence.score-a.prominence.score || b.mentionCount-a.mentionCount || a.displayName.localeCompare(b.displayName));
+  }).sort((a,b)=>
+    b.mentionCount-a.mentionCount ||
+    b.chunkIds.length-a.chunkIds.length ||
+    b.prominence.score-a.prominence.score ||
+    a.displayName.localeCompare(b.displayName)
+  );
 
   const analysisId=`analysis-${hashId(manifest.source.sourceId+"|"+manifest.source.sha256)}`;
   return {
