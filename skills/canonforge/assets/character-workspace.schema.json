@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canonforge.local/schemas/character-workspace-0.1.0.json",
+  "title": "CanonForge Character Workspace",
+  "type": "object",
+  "additionalProperties": false,
+  "required":["schemaVersion","workspaceId","branchRevision","status","sourceAnalysis","character","sourceUsage","characterCoreRef","visualIdentityRef"],
+  "properties":{
+    "schemaVersion":{"const":"0.1.0"},
+    "workspaceId":{"type":"string","minLength":1},
+    "branchRevision":{"type":"integer","minimum":1},
+    "status":{"enum":["selected","extracting","ready","visual-development","archived"]},
+    "sourceAnalysis":{
+      "type":"object",
+      "required":["ref","analysisId","sourceId","sourceHash"],
+      "properties":{
+        "ref":{"type":"string","minLength":1},
+        "analysisId":{"type":"string","minLength":1},
+        "sourceId":{"type":"string","minLength":1},
+        "sourceHash":{"type":"string","pattern":"^[a-fA-F0-9]{64}$"}
+      }
+    },
+    "character":{
+      "type":"object",
+      "required":["characterId","displayName","names","prominence"],
+      "properties":{
+        "characterId":{"type":"string","minLength":1},
+        "displayName":{"type":"string","minLength":1},
+        "names":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+        "prominence":{"type":"object"}
+      }
+    },
+    "sourceUsage":{
+      "type":"object",
+      "required":["directChunkIds","requiredChunkIds","cachedDetailChunkIds","pendingDetailChunkIds"],
+      "properties":{
+        "directChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+        "requiredChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+        "cachedDetailChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+        "pendingDetailChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true}
+      }
+    },
+    "characterCoreRef":{"type":["string","null"]},
+    "visualIdentityRef":{"type":["string","null"]}
+  }
+}
