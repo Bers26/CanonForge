@@ -12,13 +12,14 @@ function scoreCharacter(entity,mentionMap,totalChunks) {
   const chunkIds=uniq(mentions.map(m=>m.chunkId));
   const signals=uniq(mentions.flatMap(m=>m.signals ?? []));
   const coverage=totalChunks ? chunkIds.length/totalChunks : 0;
-  const mentionSaturation=Math.min(1,mentions.length/Math.max(4,totalChunks));
+  const mentionCount=mentions.reduce((sum,m)=>sum+(Number.isInteger(m.mentionCount)?m.mentionCount:1),0);
+  const mentionSaturation=Math.min(1,mentionCount/Math.max(4,totalChunks));
   const active=mentions.filter(m=>(m.signals??[]).some(s=>["dialogue","action","description","player"].includes(s))).length;
   const activeRatio=mentions.length ? active/mentions.length : 0;
   const identityBonus=entity.mergeBasis.includes("source_identity_key") ? 0.08 : 0;
   const score=Math.round(100*Math.min(1,0.62*coverage+0.22*mentionSaturation+0.08*activeRatio+identityBonus));
   const band = score >= 38 || coverage >= 0.35 ? "key" : (score >= 14 || chunkIds.length >= 2 ? "recurring" : "minor");
-  return {score,band,mentionCount:mentions.length,chunkIds,signals,coverage};
+  return {score,band,mentionCount,chunkIds,signals,coverage};
 }
 
 export function buildSourceAnalysis(manifest, normalizedRosterBundle) {
