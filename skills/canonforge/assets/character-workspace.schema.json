@@ -32,12 +32,13 @@
     },
     "sourceUsage":{
       "type":"object",
-      "required":["directChunkIds","requiredChunkIds","cachedDetailChunkIds","pendingDetailChunkIds"],
+      "required":["directChunkIds","requiredChunkIds","cachedDetailChunkIds","pendingDetailChunkIds","requestedContextChunkIds"],
       "properties":{
         "directChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true},
         "requiredChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true},
         "cachedDetailChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true},
-        "pendingDetailChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true}
+        "pendingDetailChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true},
+        "requestedContextChunkIds":{"type":"array","items":{"type":"string"},"uniqueItems":true}
       }
     },
     "characterCoreRef":{"type":["string","null"]},
