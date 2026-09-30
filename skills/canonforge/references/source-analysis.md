@@ -60,6 +60,8 @@ Each roster record represents one character in one chunk and carries a local `me
 
 This count is a ranking signal, not a forensic word-frequency statistic.
 
+Do not inflate it with export/UI duplication. Treat duplicated Character.AI speaker headers as one message identity, ignore counters such as `2 / 30`, timestamps, exporter chrome, and other repeated interface text. Repeated pasted summaries or character cards may supply facts, but should not dominate narrative prominence merely because the same block was copied multiple times.
+
 Tie breakers:
 
 1. number of distinct chunks in which the character appears;
