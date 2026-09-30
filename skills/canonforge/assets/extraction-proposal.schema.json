@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canonforge.local/schemas/extraction-proposal-0.1.0.json",
+  "title": "CanonForge Extraction Proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion","sourceId","chunkId","mentions","aliasClaims","transformations","conflicts","openQuestions"],
+  "properties": {
+    "schemaVersion": {"const":"0.1.0"},
+    "sourceId": {"type":"string","minLength":1},
+    "chunkId": {"type":"string","minLength":1},
+    "mentions": {
+      "type":"array",
+      "items": {
+        "type":"object",
+        "additionalProperties": false,
+        "required":["mentionId","primaryName","sourceIdentityKey","facts"],
+        "properties": {
+          "mentionId":{"type":"string","minLength":1},
+          "primaryName":{"type":"string","minLength":1},
+          "sourceIdentityKey":{"type":["string","null"]},
+          "facts":{"type":"array","items":{"$ref":"#/$defs/factProposal"}}
+        }
+      }
+    },
+    "aliasClaims":{"type":"array","items":{"$ref":"#/$defs/aliasClaim"}},
+    "transformations":{"type":"array","items":{"type":"object"}},
+    "conflicts":{"type":"array","items":{"type":["string","object"]}},
+    "openQuestions":{"type":"array","items":{"type":"string"}}
+  },
+  "$defs": {
+    "locator": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["quote","occurrence"],
+      "properties": {
+        "quote":{"type":"string","minLength":1},
+        "occurrence":{"type":"integer","minimum":0}
+      }
+    },
+    "factProposal": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["path","value","origin","evidence"],
+      "properties": {
+        "path":{"type":"string","minLength":1},
+        "value":{},
+        "origin":{"enum":["explicit_source","inferred"]},
+        "evidence":{"$ref":"#/$defs/locator"}
+      }
+    },
+    "aliasClaim": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["left","right","basis","evidence"],
+      "properties": {
+        "left":{"type":"string","minLength":1},
+        "right":{"type":"string","minLength":1},
+        "basis":{"enum":["explicit","probable"]},
+        "evidence":{"$ref":"#/$defs/locator"}
+      }
+    }
+  }
+}
