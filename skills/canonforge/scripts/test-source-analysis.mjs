@@ -28,6 +28,7 @@ assert(mira,"Mira entity missing");
 assert(mira.names.includes("Мира"),"Mira alias forms were not merged");
 assert(mira.chunkIds.length===3,`Mira should cover 3 chunks, got ${mira.chunkIds.length}`);
 assert(mira.prominence.band==="key",`Mira should be key, got ${mira.prominence.band}`);
+assert(mira.mentionCount===7,`Mira mention count should aggregate per-chunk counts, got ${mira.mentionCount}`);
 assert(analysis.characters[0].characterId===mira.characterId,"roster must put the most-mentioned character first");
 for (let i=1;i<analysis.characters.length;i++) {
   const prev=analysis.characters[i-1], cur=analysis.characters[i];
@@ -74,7 +75,7 @@ assert(multiNarratorAnalysis.narratorCandidateIds.length===2,"multiple narrator 
 
 console.log(JSON.stringify({
   ok:true,
-  tests:17,
+  tests:18,
   characters:analysis.characters.length,
   keyCharacters:analysis.keyCharacterIds.length,
   miraChunks:mira.chunkIds.length,
