@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canonforge.local/schemas/project-0.1.0.json",
+  "title": "CanonForge Project",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "projectId",
+    "title",
+    "revision",
+    "sources",
+    "characters",
+    "assets",
+    "world",
+    "style",
+    "revisionLog"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "0.1.0" },
+    "projectId": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "characters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/character" }
+    },
+    "assets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/asset" }
+    },
+    "world": { "$ref": "#/$defs/factContainer" },
+    "style": { "$ref": "#/$defs/factContainer" },
+    "revisionLog": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/revisionLogEntry" }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceId", "start", "end", "quote", "sourceHash"],
+      "properties": {
+        "sourceId": { "type": "string", "minLength": 1 },
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 1 },
+        "quote": { "type": "string" },
+        "sourceHash": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
+      }
+    },
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "factId",
+        "path",
+        "value",
+        "origin",
+        "status",
+        "lockPolicy",
+        "evidence",
+        "validFrom",
+        "validTo",
+        "revisionIntroduced",
+        "supersedes"
+      ],
+      "properties": {
+        "factId": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "value": {},
+        "origin": {
+          "enum": ["explicit_source", "user", "inferred", "design_choice", "unknown"]
+        },
+        "status": {
+          "enum": ["proposed", "confirmed", "approved", "rejected", "conflict", "superseded"]
+        },
+        "lockPolicy": {
+          "enum": [
+            "immutable",
+            "explicit_event_only",
+            "story_event",
+            "allowed_variation",
+            "scene_variable",
+            "open_design_variable"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "validFrom": { "type": ["string", "null"] },
+        "validTo": { "type": ["string", "null"] },
+        "revisionIntroduced": { "type": "integer", "minimum": 1 },
+        "supersedes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceId", "name", "path", "sha256", "kind", "length"],
+      "properties": {
+        "sourceId": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "kind": { "enum": ["text", "markdown", "script", "log", "other"] },
+        "length": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stateId", "label", "factIds", "identityCoreVersion"],
+      "properties": {
+        "stateId": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "factIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "identityCoreVersion": { "type": "string", "minLength": 1 }
+      }
+    },
+    "transformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transformationId",
+        "fromState",
+        "toState",
+        "kind",
+        "affectedPaths",
+        "identityEffect",
+        "anthropometryEffect",
+        "approvalStatus",
+        "evidence"
+      ],
+      "properties": {
+        "transformationId": { "type": "string", "minLength": 1 },
+        "fromState": { "type": "string", "minLength": 1 },
+        "toState": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "affectedPaths": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "identityEffect": { "enum": ["preserved", "modified", "replaced"] },
+        "anthropometryEffect": { "enum": ["none", "partial", "major"] },
+        "approvalStatus": { "enum": ["proposed", "approved", "rejected"] },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        }
+      }
+    },
+    "lock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "policy", "reason", "introducedRevision"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "policy": {
+          "enum": [
+            "immutable",
+            "explicit_event_only",
+            "story_event",
+            "allowed_variation",
+            "scene_variable",
+            "open_design_variable"
+          ]
+        },
+        "reason": { "type": "string", "minLength": 1 },
+        "introducedRevision": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "visualIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "version",
+        "masterAssetIds",
+        "approvedTraits",
+        "negativeConstraints"
+      ],
+      "properties": {
+        "status": { "enum": ["none", "exploration", "locked"] },
+        "version": { "type": ["string", "null"] },
+        "masterAssetIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "approvedTraits": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "negativeConstraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "sheet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sheetId", "sheetType", "stateId", "status", "assetIds"],
+      "properties": {
+        "sheetId": { "type": "string", "minLength": 1 },
+        "sheetType": { "type": "string", "minLength": 1 },
+        "stateId": { "type": ["string", "null"] },
+        "status": { "enum": ["planned", "candidate", "approved", "rejected"] },
+        "assetIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "character": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "characterId",
+        "displayName",
+        "aliases",
+        "facts",
+        "identity",
+        "baselineBody",
+        "states",
+        "transformations",
+        "locks",
+        "openQuestions",
+        "conflicts",
+        "visualIdentity",
+        "sheets"
+      ],
+      "properties": {
+        "characterId": { "type": "string", "minLength": 1 },
+        "displayName": { "type": "string", "minLength": 1 },
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "facts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fact" }
+        },
+        "identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["identityCoreFactIds", "identityAnchorFactIds"],
+          "properties": {
+            "identityCoreFactIds": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            },
+            "identityAnchorFactIds": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            }
+          }
+        },
+        "baselineBody": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["factIds"],
+          "properties": {
+            "factIds": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            }
+          }
+        },
+        "states": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/state" }
+        },
+        "transformations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/transformation" }
+        },
+        "locks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/lock" }
+        },
+        "openQuestions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "conflicts": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "visualIdentity": { "$ref": "#/$defs/visualIdentity" },
+        "sheets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sheet" }
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assetId",
+        "role",
+        "fileName",
+        "sha256",
+        "characterId",
+        "stateId",
+        "visualIdentityVersion",
+        "approvalStatus"
+      ],
+      "properties": {
+        "assetId": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "fileName": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "characterId": { "type": ["string", "null"] },
+        "stateId": { "type": ["string", "null"] },
+        "visualIdentityVersion": { "type": ["string", "null"] },
+        "approvalStatus": { "enum": ["candidate", "approved", "rejected"] }
+      }
+    },
+    "factContainer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["facts"],
+      "properties": {
+        "facts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fact" }
+        }
+      }
+    },
+    "revisionLogEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "timestamp", "summary", "changes", "approvedBy"],
+      "properties": {
+        "revision": { "type": "integer", "minimum": 1 },
+        "timestamp": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "changes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "approvedBy": { "enum": ["user", "system"] }
+      }
+    }
+  }
+}
