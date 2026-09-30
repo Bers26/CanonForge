@@ -12,7 +12,7 @@ function row(c,number,data) {
   const aliases=(c.names??[]).filter(n=>n!==c.displayName);
   const aliasText=aliases.length?` — также: ${aliases.join(", ")}`:"";
   const narratorMark=data.narratorCharacterId===c.characterId ? "; рассказчик от первого лица" : "";
-  return `${number}. **${c.displayName}**${aliasText}; упоминаний: ${c.mentionCount}; фрагментов: ${c.chunkIds.length}/${data.chunking.chunkCount}; ${bandLabel(c.prominence.band)}${narratorMark}`;
+  return `${number}. **${c.displayName}**${aliasText}; упоминаний: ≈${c.mentionCount}; фрагментов: ${c.chunkIds.length}/${data.chunking.chunkCount}; ${bandLabel(c.prominence.band)}${narratorMark}`;
 }
 
 export function renderRoster(data) {
