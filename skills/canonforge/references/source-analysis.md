@@ -13,7 +13,8 @@ Selecting a character must not repeat chunking, whole-source roster discovery, o
 Run across every chunk and collect only what is necessary to build the cast:
 
 - character name/label;
-- exact evidence for the mention;
+- local semantic mention count used for ordering;
+- exact evidence for a representative mention;
 - stable source identity key when the source provides one;
 - explicit alias relations;
 - lightweight prominence signals.
@@ -51,7 +52,11 @@ Use the explicit `first_person_narrator` roster signal. Do not infer narrator id
 
 If several distinct characters are first-person narrators, preserve all narrator candidates and do not assign a global №0 automatically.
 
-All non-narrator characters are sorted primarily by **mention count**, descending.
+All non-narrator characters are sorted primarily by **semantic mention count**, descending.
+
+Each roster record represents one character in one chunk and carries a local `mentionCount`. The model estimates how many meaningful references to that character occur in that chunk instead of emitting one JSON object for every occurrence. CanonForge aggregates those counts.
+
+This count is a ranking signal, not a forensic word-frequency statistic.
 
 Tie breakers:
 
