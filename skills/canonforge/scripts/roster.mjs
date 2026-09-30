@@ -23,6 +23,7 @@ export function validateRosterProposal(p) {
     if (!nonempty(m.mentionId)) errors.push(`${b}.mentionId: required`);
     if (!nonempty(m.primaryName)) errors.push(`${b}.primaryName: required`);
     if (!(m.sourceIdentityKey === null || nonempty(m.sourceIdentityKey))) errors.push(`${b}.sourceIdentityKey: expected string or null`);
+    if (!Number.isInteger(m.mentionCount) || m.mentionCount < 1) errors.push(`${b}.mentionCount: expected integer >= 1`);
     errors.push(...validateLocator(m.evidence,`${b}.evidence`));
     if (!Array.isArray(m.signals)) errors.push(`${b}.signals: expected array`);
     else for (const s of m.signals) if (!SIGNALS.has(s)) errors.push(`${b}.signals: invalid signal ${s}`);
