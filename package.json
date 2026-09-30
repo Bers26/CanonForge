@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node skills/canonforge/scripts/test-core.mjs",
+    "test": "node skills/canonforge/scripts/test-core.mjs && node skills/canonforge/scripts/test-ingestion.mjs",
+    "test:core": "node skills/canonforge/scripts/test-core.mjs",
+    "test:ingestion": "node skills/canonforge/scripts/test-ingestion.mjs",
     "validate:fixture": "node skills/canonforge/scripts/validate-project.mjs skills/canonforge/fixtures/project.valid.json",
-    "verify:fixture": "node skills/canonforge/scripts/verify-evidence.mjs skills/canonforge/fixtures/project.valid.json"
+    "verify:fixture": "node skills/canonforge/scripts/verify-evidence.mjs skills/canonforge/fixtures/project.valid.json",
+    "validate:proposals": "node skills/canonforge/scripts/validate-proposal.mjs skills/canonforge/fixtures/proposals.json"
   }
 }
