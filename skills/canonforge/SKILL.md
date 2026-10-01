@@ -175,9 +175,28 @@ When the user requests visual development:
 - generate several materially distinct candidates;
 - keep candidates unapproved until the user selects them.
 
-Follow `references/image-workflow.md`.
+Follow `references/image-workflow.md`, `references/visual-revision.md`, and `references/expression-sheet.md`.
 
 The blocker for leaving Exploration is the absence of an approved candidate or approved combination. Once the user approves one, explicitly propose creation of Master Identity.
+
+### 8A. Handle visual feedback before drawing again
+
+If the user says an image, sheet, angle, expression, or design is wrong, incomplete, inconsistent, or drifting, do **not** immediately invoke image generation.
+
+First:
+
+1. inspect the current visual result and the user's correction;
+2. identify the exact mismatch;
+3. classify the error: identity geometry, proportions, pose, expression, costume, composition, style, state, detail, or another specific category;
+4. determine the likely cause;
+5. identify which parts are already correct and must be preserved;
+6. formulate a targeted correction plan.
+
+Only after that analysis may CanonForge generate or edit again, and only if the user's instruction includes continuing to a corrected image or the user accepts the proposed correction.
+
+When the defect is identity geometry or cross-view consistency, prefer targeted edit from the approved anchor. Do not solve it by regenerating the whole sheet from scratch.
+
+Follow `references/visual-revision.md`.
 
 ### 9. Lock visual identity
 
@@ -186,6 +205,10 @@ After user approval, record the approved visual asset as a visual reference and 
 Textual canon remains separate from visual identity.
 
 When visual identity is locked and no required transformation/state issue remains, explicitly propose the next relevant production sheet or scene-generation stage.
+
+Before generating an expression sheet, first formulate each requested emotion as a concrete facial delta from the neutral Master Identity. Expressions on a reference sheet should be intentionally stronger and more diagnostic than ordinary scene acting while preserving anatomy and identity.
+
+Follow `references/expression-sheet.md`.
 
 ### 10. Production sheets and scenes
 
