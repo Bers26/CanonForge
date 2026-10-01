@@ -6,6 +6,8 @@ A long source is analyzed globally once.
 
 Selecting a character must not repeat chunking, whole-source roster discovery, or alias resolution.
 
+A source may legitimately contain one character, several characters, or no confidently resolvable character.
+
 ## Two-stage analysis
 
 ### Stage A — lightweight roster pass
@@ -25,7 +27,9 @@ The result is a reusable `source-analysis.json`.
 
 ### Stage B — selected character detail
 
-After the user chooses a character, create a character workspace.
+After the character is chosen, create a character workspace.
+
+If the roster contains exactly one unambiguous character, there is no meaningful selection choice. Present that character and propose entering Stage B for them.
 
 The workspace points to the existing source analysis and lists:
 
@@ -43,6 +47,16 @@ Detailed extraction results belong to the shared chunk cache whenever possible. 
 The original source remains authoritative.
 
 `source-analysis.json` is a reusable derived index tied to the source SHA-256. If the source hash changes, the analysis is stale and must be refreshed.
+
+## Roster cardinality
+
+The roster has three meaningful cases:
+
+- **0 characters** — blocker: no character can yet be selected; report what prevented confident detection.
+- **1 character** — valid result; selection is not a blocker. Show the character and propose detailed branch creation.
+- **2+ characters** — show the ordered roster and require user selection before branch creation.
+
+Never invent extra characters merely to produce a multi-item list.
 
 ## Roster ordering and first-person narrator
 
