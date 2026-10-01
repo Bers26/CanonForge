@@ -42,7 +42,7 @@ jobs:
           const root = 'dist/canonforge';
           const p = JSON.parse(fs.readFileSync(root + '/plugin.json', 'utf8'));
           const compat = {
-            interface: p.extensions.com.openai.interface,
+            interface: p.extensions["com.openai"].interface,
             name: p.name,
             version: p.version,
             description: p.description,
