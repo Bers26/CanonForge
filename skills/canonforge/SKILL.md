@@ -35,6 +35,19 @@ Use the pattern:
 PROPOSE -> VALIDATE -> APPROVE WHEN REQUIRED -> COMMIT
 ```
 
+## Stage progression
+
+For every user-visible stage, maintain a short blocker set.
+
+- A **blocker** is only something that actually prevents the next stage.
+- Missing optional detail, open design variables, or harmless uncertainty are not blockers.
+- When blockers remain, show only the blockers that matter and resolve them as directly as possible.
+- When the blocker set becomes empty, explicitly state that the stage is ready and propose the concrete next stage.
+- Do not stop at a completed result without offering the next valid action.
+- Do not force advancement automatically unless the user's current instruction already asks to continue through later stages.
+
+Follow `references/stage-progression.md`.
+
 ## Workflow
 
 ### 1. Ingest and chunk
@@ -80,15 +93,21 @@ Then build one reusable `source-analysis.json` with `scripts/build-source-analys
 
 Immediately show the user the found character roster.
 
+A valid source may contain **one character only**. Do not treat a one-character roster as incomplete and do not invent additional characters to create a choice.
+
+If exactly one character is found and there is no identity ambiguity affecting that character, selection is not a blocker. Show the character and explicitly propose the next stage: create that character's detailed branch.
+
+If several characters are found, character selection remains a blocker until the user chooses one.
+
 If exactly one character is the stable first-person narrator, mark that character with the `first_person_narrator` signal and show them as **№0**, regardless of direct name-mention count. Do not equate generic player identity with first-person narration. If several distinct first-person narrators exist, keep all narrator candidates and do not assign №0 automatically.
 
-Sort all remaining characters primarily by aggregated semantic mention count, descending. Use distinct chunk count and prominence only as tie breakers. Do not hide minor characters from the underlying roster. The key/recurring/minor classification is only a label, not canon and not the primary sort order. Do not auto-select a character or create a branch before the user chooses one.
+Sort all remaining characters primarily by aggregated semantic mention count, descending. Use distinct chunk count and prominence only as tie breakers. Do not hide minor characters from the underlying roster. The key/recurring/minor classification is only a label, not canon and not the primary sort order.
 
 Follow `references/source-analysis.md`.
 
 ### 3. Create a selected character branch
 
-When the user selects a character, create a **ветка персонажа** using `scripts/create-character-workspace.mjs`.
+When the user selects a character, or explicitly accepts the proposed sole-character transition, create a **ветка персонажа** using `scripts/create-character-workspace.mjs`.
 
 The workspace must reference the existing source analysis instead of copying or re-processing the whole source.
 
@@ -129,17 +148,23 @@ Before committing:
 
 Deterministic failures must not be overridden by prose reasoning.
 
+If validation passes and no critical ambiguity remains, the branch is ready for Character Core review. Explicitly propose that next stage.
+
 ### 6. Ask only critical questions
 
 Ask when the missing value blocks the next requested artifact or when ambiguity could corrupt identity.
 
 Do not interrogate the user for every unspecified detail. Open design variables may remain open for Exploration.
 
+After every answer that removes a blocker, re-evaluate the blocker set. If it becomes empty, explicitly propose the next stage in the same response.
+
 ### 7. Commit canon
 
 Do not silently mutate approved or locked facts.
 
 Existing facts are historical records. New facts may supersede earlier facts only through an explicit revision consistent with lock and transformation rules.
+
+Once Character Core is valid and committed, unresolved open design variables are not blockers. Explicitly propose Visual Exploration unless the user requested another next artifact.
 
 ### 8. Visual exploration
 
@@ -152,11 +177,15 @@ When the user requests visual development:
 
 Follow `references/image-workflow.md`.
 
+The blocker for leaving Exploration is the absence of an approved candidate or approved combination. Once the user approves one, explicitly propose creation of Master Identity.
+
 ### 9. Lock visual identity
 
 After user approval, record the approved visual asset as a visual reference and set the visual identity version.
 
 Textual canon remains separate from visual identity.
+
+When visual identity is locked and no required transformation/state issue remains, explicitly propose the next relevant production sheet or scene-generation stage.
 
 ### 10. Production sheets and scenes
 
@@ -181,4 +210,6 @@ A stage is complete only when:
 - evidence checks pass where required;
 - no locked property changed illegally;
 - required user approval is recorded;
-- the next stage has an unambiguous current state.
+- no actual blocker prevents the next stage.
+
+When these conditions are met, do not merely report completion. State the next valid stage and offer to enter it.
