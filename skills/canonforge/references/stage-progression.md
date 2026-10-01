@@ -95,14 +95,46 @@ Blocker:
 
 When approved, propose Master Identity.
 
+### Visual correction loop
+
+When the user reports a defect in a generated visual, generation pauses before the next image operation.
+
+Blockers:
+
+- the defect has not yet been identified precisely;
+- the correction would require an approved anchor that is unavailable;
+- the requested fix conflicts with locked identity/canon and the conflict is unresolved.
+
+Required action before drawing again:
+
+- analyze the failure;
+- identify its cause;
+- state what must remain unchanged;
+- define the targeted correction.
+
+When those blockers are clear, proceed with the targeted edit if the user already asked for correction; otherwise propose the edit.
+
 ### Master Identity -> Production
 
 Blockers:
 
 - Master Identity not approved;
+- cross-view identity geometry still drifts;
 - unresolved required state/transformation mismatch.
 
 When clear, propose the next useful production artifact such as turnaround, expressions, costume, transformation state, or requested scene.
+
+### Expression specification -> Expression sheet
+
+Before drawing expressions, each requested emotion must have a written facial specification.
+
+Blockers:
+
+- one or more emotions are only labels without concrete facial changes;
+- the specification changes anatomy instead of expression;
+- the neutral Master Identity anchor is unavailable when consistency depends on it.
+
+When clear, generate the expression sheet with deliberately strong, diagnostic expressions while preserving identity.
 
 ## Response style
 
