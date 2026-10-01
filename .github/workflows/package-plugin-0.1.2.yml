@@ -1,0 +1,65 @@
+name: Build CanonForge plugin 0.1.2
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run regression tests
+        run: npm test
+
+      - name: Build production plugin archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="dist/canonforge"
+          mkdir -p "$ROOT/skills/canonforge/references"
+          mkdir -p "$ROOT/skills/canonforge/assets"
+          mkdir -p "$ROOT/skills/canonforge/scripts"
+          mkdir -p "$ROOT/.codex-plugin"
+
+          cp plugin.json "$ROOT/plugin.json"
+          cp skills/canonforge/SKILL.md "$ROOT/skills/canonforge/SKILL.md"
+          cp skills/canonforge/references/* "$ROOT/skills/canonforge/references/"
+          cp skills/canonforge/assets/* "$ROOT/skills/canonforge/assets/"
+          cp skills/canonforge/scripts/*.mjs "$ROOT/skills/canonforge/scripts/"
+
+          rm -f "$ROOT/skills/canonforge/scripts/test-core.mjs"
+          rm -f "$ROOT/skills/canonforge/scripts/test-ingestion.mjs"
+          rm -f "$ROOT/skills/canonforge/scripts/test-source-analysis.mjs"
+
+          node <<'NODE'
+          const fs = require('fs');
+          const root = 'dist/canonforge';
+          const p = JSON.parse(fs.readFileSync(root + '/plugin.json', 'utf8'));
+          const compat = {
+            interface: p.extensions["com.openai"].interface,
+            name: p.name,
+            version: p.version,
+            description: p.description,
+            author: p.author,
+            keywords: [],
+            skills: "./skills"
+          };
+          fs.writeFileSync(root + '/.codex-plugin/plugin.json', JSON.stringify(compat, null, 2) + '\n');
+          NODE
+
+          cd dist
+          zip -rq CanonForge-plugin-0.1.2.zip canonforge
+
+      - name: Upload plugin archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonforge-plugin-0.1.2
+          path: dist/CanonForge-plugin-0.1.2.zip
+          if-no-files-found: error
+          compression-level: 0
