@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "canonforge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Build and preserve grounded character canon and visual continuity inside ChatGPT.",
   "author": {
     "name": "Bers26"
